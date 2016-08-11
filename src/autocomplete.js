@@ -75,7 +75,7 @@ angular.module('google.places', [])
                         var drawerElement = angular.element('<div g-places-autocomplete-drawer></div>'),
                             // Do not append to body - element must be added inside div.scroll
                             // body = angular.element($document[0].body),
-                            scroll = angular.element($document[0].querySelector('div.scroll')),
+                            scroll = angular.element(element[0]).parent().parent().parent().parent().parent(),
                             $drawer;
 
                         drawerElement.attr({
@@ -394,7 +394,7 @@ angular.module('google.places', [])
                         rect = domEl.getBoundingClientRect(),
                         docEl = $document[0].documentElement,
                         body = $document[0].body,
-                        scrollEl = $document[0].querySelector('div.scroll'),
+                        scrollEl = angular.element(element[0]).parent().parent().parent().parent().parent()[0],
                         scrollRect = scrollEl.getBoundingClientRect(),
                         scrollTop = $window.pageYOffset || docEl.scrollTop || body.scrollTop,
                         scrollLeft = $window.pageXOffset || docEl.scrollLeft || body.scrollLeft;
