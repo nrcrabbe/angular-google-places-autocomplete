@@ -73,7 +73,9 @@ angular.module('google.places', [])
                     function initAutocompleteDrawer() {
                         // Drawer element used to display predictions
                         var drawerElement = angular.element('<div g-places-autocomplete-drawer></div>'),
-                            body = angular.element($document[0].body),
+                            // Do not append to body - element must be added inside div.scroll
+                            // body = angular.element($document[0].body),
+                            scroll = angular.element($document[0].querySelector('div.scroll')),
                             $drawer;
 
                         drawerElement.attr({
@@ -85,7 +87,8 @@ angular.module('google.places', [])
                         });
 
                         $drawer = $compile(drawerElement)($scope);
-                        body.append($drawer);  // Append to DOM
+                        // body.append($drawer);  // Append to DOM
+                        scroll.append($drawer);
 
                         $scope.$on('$destroy', function() {
                             $drawer.remove();
@@ -386,18 +389,21 @@ angular.module('google.places', [])
                 }, true);
 
                 function getDrawerPosition(element) {
-                    var domEl = element[0],
+                    // Changing since the input is relative to the div.scroll rather than the body
+                    var domEl = element[0], // The input
                         rect = domEl.getBoundingClientRect(),
                         docEl = $document[0].documentElement,
                         body = $document[0].body,
+                        scrollEl = $document[0].querySelector('div.scroll'),
+                        scrollRect = scrollEl.getBoundingClientRect(),
                         scrollTop = $window.pageYOffset || docEl.scrollTop || body.scrollTop,
                         scrollLeft = $window.pageXOffset || docEl.scrollLeft || body.scrollLeft;
 
                     return {
                         width: rect.width,
                         height: rect.height,
-                        top: rect.top + rect.height + scrollTop,
-                        left: rect.left + scrollLeft
+                        top: rect.top - scrollRect.top + rect.height + scrollTop,
+                        left: rect.left - scrollRect.left + scrollLeft
                     };
                 }
             }
